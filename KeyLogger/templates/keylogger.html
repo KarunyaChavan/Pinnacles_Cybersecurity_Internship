@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keylogger Control</title>
+    <style>
+        body {
+            background-color: #1c1c1c;
+            color: #e5e5e5;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        h1 {
+            color: #f4f4f4;
+            margin-bottom: 20px;
+        }
+        .container {
+            background-color: #2c2c2c;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .logs {
+            margin-top: 20px;
+            background-color: #3c3c3c;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-y: auto;
+            max-height: 200px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Keylogger Control</h1>
+    <div class="container">
+        <button onclick="startKeylogger()">Start Keylogger</button>
+        <button onclick="stopKeylogger()">Stop Keylogger</button>
+        <button onclick="fetchLogs()">View Logs</button>
+        <div class="logs" id="logs"></div>
+    </div>
+
+    <script>
+        async function startKeylogger() {
+            const response = await fetch('/start', { method: 'POST' });
+            const result = await response.json();
+            alert(result.status);
+        }
+
+        async function stopKeylogger() {
+            const response = await fetch('/stop', { method: 'POST' });
+            const result = await response.json();
+            alert(result.status);
+        }
+
+        async function fetchLogs() {
+            const response = await fetch('/logs');
+            const result = await response.json();
+            const logsDiv = document.getElementById('logs');
+            logsDiv.textContent = result.logs || 'No logs available';
+        }
+    </script>
+</body>
+</html>

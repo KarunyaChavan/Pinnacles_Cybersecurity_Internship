@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Encryption</title>
+    <style>
+        body {
+            background-color: #1c1c1c;
+            color: #e5e5e5;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        h1 {
+            color: #f4f4f4;
+            margin-bottom: 20px;
+        }
+        form {
+            background-color: #2c2c2c;
+            padding: 35px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(222, 40, 40, 0.78);
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #cccccc;
+        }
+        input, select, button {
+            width: 100%;
+            margin-bottom: 15px;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+        }
+        input, select {
+            background-color: #3c3c3c;
+            color: #e5e5e5;
+        }
+        button {
+            background-color: #4caf50;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color:rgba(73, 158, 77, 0.92);
+            color: rgb(25, 22, 22);
+        }
+        #result {
+            margin-top: 20px;
+            background-color: #3c3c3c;
+            padding: 10px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Text Encryption Project</h1>
+    <form id="encryption-form">
+        <label for="text">Text:</label>
+        <input type="text" id="text" name="text" required><br>
+
+        <label for="algorithm">Algorithm:</label>
+        <select id="algorithm" name="algorithm" required>
+            <option value="AES">AES</option>
+            <option value="DES">DES</option>
+            <option value="RSA">RSA</option>
+        </select><br>
+
+        <label for="key">Key (if needed):</label>
+        <input type="text" id="key" name="key"><br>
+
+        <button type="button" onclick="encryptText()">Encrypt</button>
+        <button type="button" onclick="decryptText()">Decrypt</button>
+    </form>
+
+    <h2>Result</h2>
+    <p id="result"></p>
+
+    <script>
+        async function encryptText() {
+            const text = document.getElementById('text').value;
+            const algorithm = document.getElementById('algorithm').value;
+            const key = document.getElementById('key').value;
+
+            const response = await fetch('/encrypt', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text, algorithm, key })
+            });
+
+            const result = await response.json();
+            document.getElementById('result').textContent = result.encrypted || result.error;
+        }
+
+        async function decryptText() {
+            const text = document.getElementById('text').value;
+            const algorithm = document.getElementById('algorithm').value;
+            const key = document.getElementById('key').value;
+
+            const response = await fetch('/decrypt', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ encrypted: text, algorithm, key })
+            });
+
+            const result = await response.json();
+            document.getElementById('result').textContent = result.decrypted || result.error;
+        }
+    </script>
+</body>
+</html>
